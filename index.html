@@ -16,7 +16,6 @@
 <body>
     <h1>Text to Multimedia Conversion</h1>
     <form id="textForm">
-        <label for="text_input">Enter Text:</label>
         <textarea id="text_input" name="text_input" rows="7" cols="50" required></textarea>
         <button type="button" onclick="submitText()">Convert</button>
     </form>
@@ -34,6 +33,7 @@
             alert("Please wait...");
             var text = $('#text_input').val().replace(/\n/g, " "); // Good practice to clean and prepare data here.
             $.post('process.php', { inputText: text }, function (data) {
+                alert("success");
                 $('#text_show').val(data.finaltext).show(); // Display the returned text status if needed.
                 $('#audioPlayer').attr('src', "./output/audio/" + data.audioname).show();
                 $('#videoPlayer').attr('src', "./output/video/" + data.videoname).show();
