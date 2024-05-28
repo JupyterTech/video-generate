@@ -8,7 +8,7 @@ $promises = array();
 $client = new Client();
 $getID3 = new getID3;
 set_time_limit(1000);
-$apiKey = 'sk-proj-vrShgTCRZRkiewHxm1U4T3BlbkFJm6aWMICQ3MejTnX91qlJ';
+$apiKey = '';
 function getAudioDuration($audioFile)
 {
     // Command to get the audio duration using ffprobe
