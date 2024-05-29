@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Text to Speech and Image Generation</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         #images img {
-            max-width: 300px;
-            /* Keep images hidden initially */
+            max-width: 300px; /* Keep images hidden initially */
         }
     </style>
 </head>
-
 <body>
     <h1>Text to Multimedia Conversion</h1>
     <form id="textForm">
+        <label>Title:</label><input type="text" id="title"></input><br/><br/>
         <textarea id="text_input" name="text_input" rows="7" cols="50" required></textarea>
         <button type="button" onclick="submitText()">Convert</button>
     </form>
@@ -30,25 +28,25 @@
     </a>
     <script>
         function submitText() {
-            alert("Please wait...");
+	    alert("Please wait...");
+            var title=$('#title').val();
             var text = $('#text_input').val().replace(/\n/g, " "); // Good practice to clean and prepare data here.
-            $.post('process.php', { inputText: text }, function (data) {
+            $.get('process.php', { inputText: text ,inputTitle: title}, function(data) {
                 alert("success");
-                $('#text_show').val(data.finaltext).show(); // Display the returned text status if needed.
-                $('#audioPlayer').attr('src', "./output/audio/" + data.audioname).show();
-                $('#videoPlayer').attr('src', "./output/video/" + data.videoname).show();
-                $('#download_button').attr('href', "./output/video/" + data.videoname).show();
-                displayImages(data.count, data.image_name);
+                    $('#text_show').val(data.finaltext).show(); // Display the returned text status if needed.
+                    $('#audioPlayer').attr('src', "./output/audio/"+data.audioname).show();
+                    $('#videoPlayer').attr('src', "./output/video/"+data.videoname).show();
+                    $('#download_button').attr('href',"./output/video/"+data.videoname).show();
+                    displayImages(data.count,data.image_name);
             }, 'json');
         }
 
-        function displayImages(count, image_name) {
-            for (var i = 0; i < count; i++) {
-                var addimg = "<img src='./output/image/" + image_name[i] + "'>";
-                $("#images").append(addimg);
+        function displayImages(count,image_name) {
+            for(var i=0;i<count;i++){
+            var addimg="<img src='./output/image/"+image_name[i]+"'>";
+            $("#images").append(addimg);
             }
         }
     </script>
 </body>
-
 </html>
