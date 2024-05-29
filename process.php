@@ -28,7 +28,7 @@ $getID3 = new getID3;
 set_time_limit(1000);
 
 // Ensure the API key is set via environment variable or command line argument
-$apiKey = 'sk-proj-nDDVlCysDO0j5JpKfJ0IT3BlbkFJooUGCZ0gLWa2psNQyyUU';
+$apiKey = 'sk-proj-';
 
 // Create necessary directories
 createDirectories([OUTPUT_DIR, IMAGE_DIR, AUDIO_DIR, PHRASE_DIR, IMAGE_DESC_DIR, STORY_DIR, VIDEO_DIR]);
