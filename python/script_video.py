@@ -97,10 +97,11 @@ def create_video(image_folder, audio_file, api_key, font_path, output):
     images = load_images_from_folder(image_folder)
     video_clips = []
     effects = ["zoom_in", "zoom_out", "shake_zoom_in_little", "zoom_in_slowly", "zoom_in_slowly_shake", "shake_fast_zoom_in"]
-    page_turn_sound = AudioFileClip("./public/audio/move-sound.mp3")  # Load the page turn sound effect
+    page_turn_sound = AudioFileClip("./python/public/audio/move-sound.mp3")  # Load the page turn sound effect
 
     for i, img_path in enumerate(images):
         image = resize_image(img_path).set_duration(3.5)
+        
         if i == 0:
             video_clip = apply_effect(image, "zoom_in")
         elif i == 1:

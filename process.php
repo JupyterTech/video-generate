@@ -18,7 +18,7 @@ define('VIDEO_DIR', OUTPUT_DIR . 'video/');
 $promises = [];
 $client = new Client();
 $getID3 = new getID3;
-set_time_limit(1000);
+set_time_limit(3000);
 
 // Ensure the API key is set via environment variable or command line argument
 $apiKey = 'sk-proj-KtLgNhLup3ou4SCE4kzHT3BlbkFJ8Dwp1eMRLEocDmSZzz7z';
@@ -36,7 +36,7 @@ function createDirectories($directories)
 }
 function generate($imgcount, $audio_name, $image_name, $inputTitle)
 {
-    $output_name = $inputTitle . "-output.mp4";
+    $output_name = "./output/video/".$inputTitle . "-output.mp4";
     $param1="./output/image/$inputTitle";
     $param2="./output/audio/$audio_name";
     $param3=$output_name;
@@ -131,7 +131,8 @@ if ($inputText) {
     $generatedText = json_decode($response->getBody())->choices[0]->message->content;
     $generatedText = str_replace(["\r\n", "\r", "\n"], '', $generatedText);
     $sentences = explode("###image", $generatedText);
-
+    
+    mkdir("./output/image/$inputTitle", 0777, true);
     for ($i = 0; $i < $imageCount; $i++) {
         $text = $sentences[$i + 1];
         $imgDes = $inputTitle . "-image$i.txt";
@@ -146,7 +147,6 @@ if ($inputText) {
             foreach ($results as $response) {
                 $imagename = "image$count.jpg";
                 $imageResult = json_decode($response->getBody())->data[0];
-                mkdir("./output/image/$inputTitle", 0777, true);
                 file_put_contents("./output/image/$inputTitle/" . $imagename, file_get_contents($imageResult->url));
                 $image_name[] = $imagename;
                 $count += 1;
