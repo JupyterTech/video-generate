@@ -1,10 +1,14 @@
 import os
 import random
 import assemblyai as aai
+import sys
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 from moviepy.video.fx.all import resize, rotate
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
+from moviepy.config import change_settings
+change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe"})
+
 
 def load_images_from_folder(folder):
     """Load and return a sorted list of image paths from the specified folder."""
@@ -131,12 +135,14 @@ def create_video(image_folder, audio_file, api_key, font_path, output):
     final_video = final_video.set_audio(final_audio)
     
     final_video.write_videofile(output, fps=24)
-
 # Paths to image folder, audio file, font, and output video file
-image_folder = 'tim-image0/image'
-audio_file = 'tim-image0/tim-output.mp3'
-font_path = 'public/font/unb_pro_black.otf'  # Update this to the correct path
-output_file = 'output_video_with_subtitles.mp4'
-api_key = "b0e28489bdda4eb4ba9d0a60b3b0b459"  # your api_key for assemblyai
 
-create_video(image_folder, audio_file, api_key, font_path, output_file)
+if __name__ == '__main__':
+    if len(sys.argv) == 4:  # First argument is always the script name
+        api_key = "b0e28489bdda4eb4ba9d0a60b3b0b459"
+        font_path = 'public/font/unb_pro_black.otf'  # Update this to the correct path
+        create_video(sys.argv[1], sys.argv[2], api_key, font_path, sys.argv[3])
+
+        print("sucess")  # Output the result
+    else:
+        print("Invalid number of arguments")

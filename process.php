@@ -6,13 +6,6 @@ use GuzzleHttp\Promise;
 
 // Define constants for frequently used paths
 
-// windows
-// define('FFMPEG_PATH', 'C:\\ffmpeg\\bin\\ffmpeg.exe');
-// define('FFPROBE_PATH', 'C:\\ffmpeg\\bin\\ffprobe.exe');
-
-// linux
-define('FFMPEG_PATH', 'ffmpeg');
-define('FFPROBE_PATH', 'ffprobe');
 
 define('OUTPUT_DIR', './output/');
 define('IMAGE_DIR', OUTPUT_DIR . 'image/');
@@ -28,7 +21,7 @@ $getID3 = new getID3;
 set_time_limit(1000);
 
 // Ensure the API key is set via environment variable or command line argument
-$apiKey = 'sk-proj-';
+$apiKey = 'sk-proj-KtLgNhLup3ou4SCE4kzHT3BlbkFJ8Dwp1eMRLEocDmSZzz7z';
 
 // Create necessary directories
 createDirectories([OUTPUT_DIR, IMAGE_DIR, AUDIO_DIR, PHRASE_DIR, IMAGE_DESC_DIR, STORY_DIR, VIDEO_DIR]);
@@ -41,40 +34,18 @@ function createDirectories($directories)
         }
     }
 }
-
-function getAudioDuration($audioFile)
-{
-    $command = FFPROBE_PATH . ' -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ' . escapeshellarg($audioFile);
-    exec($command, $output, $return_var);
-    if ($return_var === 0) {
-        return (float) trim(implode("", $output));
-    } else {
-        return 0;
-    }
-}
-
 function generate($imgcount, $audio_name, $image_name, $inputTitle)
 {
-    $audio = AUDIO_DIR . $audio_name;
     $output_name = $inputTitle . "-output.mp4";
-    $audioDuration = getAudioDuration($audio);
-    $segmentDuration = $audioDuration / $imgcount;
-    $fileContent = "";
+    $param1="./output/image/$inputTitle";
+    $param2="./output/audio/$audio_name";
+    $param3=$output_name;
+    $command = escapeshellcmd("py ./python/script_video.py $param1 $param2 $param3");
+    $output = [];  // Variable to capture the output
+    $return_var = 0;  // Variable to capture the return status of the executed command
 
-    for ($i = 0; $i < $imgcount; $i++) {
-        $name = $image_name[$i];
-        $fileContent .= "file '" . IMAGE_DIR . $name . "'\nduration $segmentDuration\n";
-    }
-    file_put_contents('images.txt', $fileContent);
-
-    $command = FFMPEG_PATH . ' -y -f concat -safe 0 -i images.txt -vsync vfr -pix_fmt yuv420p video.mp4';
+    // Execute the Python script
     exec($command, $output, $return_var);
-
-    $command = FFMPEG_PATH . " -y -i video.mp4 -i $audio -c:v copy -c:a aac -strict experimental " . VIDEO_DIR . $output_name;
-    exec($command, $output, $return_var);
-
-    unlink("images.txt");
-    unlink("video.mp4");
     return $output_name;
 }
 $isCli = php_sapi_name() === 'cli';
@@ -173,9 +144,10 @@ if ($inputText) {
         if (($i + 1) % 5 == 0 || ($i + 1) == $imageCount) {
             $results = Promise\Utils::unwrap($promises);
             foreach ($results as $response) {
-                $imagename = $inputTitle . "-image$count.jpg";
+                $imagename = "image$count.jpg";
                 $imageResult = json_decode($response->getBody())->data[0];
-                file_put_contents(IMAGE_DIR . $imagename, file_get_contents($imageResult->url));
+                mkdir("./output/image/$inputTitle", 0777, true);
+                file_put_contents("./output/image/$inputTitle/" . $imagename, file_get_contents($imageResult->url));
                 $image_name[] = $imagename;
                 $count += 1;
             }
