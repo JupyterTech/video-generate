@@ -35,15 +35,15 @@
                 alert("success");
                     $('#text_show').val(data.finaltext).show(); // Display the returned text status if needed.
                     $('#audioPlayer').attr('src', "./output/audio/"+data.audioname).show();
-                    $('#videoPlayer').attr('src', "./output/video/"+data.videoname).show();
+                    $('#videoPlayer').attr('src', data.videoname).show();
                     $('#download_button').attr('href',"./output/video/"+data.videoname).show();
-                    displayImages(data.count,data.image_name);
+                    displayImages(data.count,data.image_name,title);
             }, 'json');
         }
 
-        function displayImages(count,image_name) {
+        function displayImages(count,image_name,title) {
             for(var i=0;i<count;i++){
-            var addimg="<img src='./output/image/"+image_name[i]+"'>";
+            var addimg="<img src='./output/image/"+title+"/"+image_name[i]+"'>";
             $("#images").append(addimg);
             }
         }
