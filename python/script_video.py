@@ -141,7 +141,7 @@ def create_video(image_folder, audio_file, api_key, font_path, output):
 if __name__ == '__main__':
     if len(sys.argv) == 4:  # First argument is always the script name
         api_key = "b0e28489bdda4eb4ba9d0a60b3b0b459"
-        font_path = 'public/font/unb_pro_black.otf'  # Update this to the correct path
+        font_path = './python/public/font/unb_pro_black.otf'  # Update this to the correct path
         create_video(sys.argv[1], sys.argv[2], api_key, font_path, sys.argv[3])
 
         print("sucess")  # Output the result
